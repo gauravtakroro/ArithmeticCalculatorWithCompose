@@ -2,7 +2,7 @@
 <resources>
     <color name="input_background">#000000</color>
     <color name="operators_background">#007aff</color>
-    <color name="dark_operators_pad_background">#aaaaaa</color>
+    <color name="operators_gray_background">#aaaaaa</color>
     <color name="numbers_background">#373737</color>
     <color name="equals_background">#007aff</color>
 </resources>

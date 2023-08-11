@@ -1,8 +1,31 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.ArithmeticCalculatorWithCompose" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:colorPrimaryDark">@color/input_background</item>
         <item name="android:windowBackground">@color/input_background</item>
         <item name="android:navigationBarColor">@color/operators_background</item>
+    </style>
+
+    <!-- Calculator Item Base Style -->
+    <style name="CalculatorUiItem" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:fontFamily">@font/lato_regular</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="CalculatorUiItem.Main" parent="CalculatorUiItem">
+        <item name="android:textSize">25sp</item>
+        <item name="android:background">@drawable/calc_item_selector</item>
+    </style>
+
+    <style name="CalculatorUiItem.Operator" parent="CalculatorUiItem">
+        <item name="android:background">@drawable/operator_item_selector</item>
+    </style>
+
+    <style name="CalculatorUiItem.Number" parent="CalculatorUiItem">
+        <item name="android:textSize">30sp</item>
+        <item name="android:background">@drawable/number_item_selector</item>
     </style>
 </resources>
