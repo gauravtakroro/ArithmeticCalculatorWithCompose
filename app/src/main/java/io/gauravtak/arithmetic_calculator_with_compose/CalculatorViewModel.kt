@@ -6,6 +6,7 @@ import io.gauravtak.arithmetic_calculator_with_compose.composable_uis.CalcButton
 
 class CalculatorViewModel : ViewModel() {
 
+    private var isArithmeticOperationButtonTapped = false
     private var resultValueDisplayed = MutableLiveData("")
     private var expressionOfCalculations = MutableLiveData("")
 
@@ -39,6 +40,22 @@ class CalculatorViewModel : ViewModel() {
 
     fun didTapNumberValue(button: CalcButtonEnum) {
         //  code for numbers
+        val number = button.expressionValue
+        if (isArithmeticOperationButtonTapped) {
+            if (resultValueDisplayed.value != "+" && resultValueDisplayed.value != "-" && resultValueDisplayed.value != "/" && resultValueDisplayed.value != "x") {
+                resultValueDisplayed.postValue("${resultValueDisplayed.value}${number}")
+            } else {
+                resultValueDisplayed.postValue(number)
+            }
+        } else {
+            if (resultValueDisplayed.value != "0") {
+                resultValueDisplayed.postValue("${resultValueDisplayed.value}${number}")
+            } else {
+                resultValueDisplayed.postValue(number)
+            }
+        }
+        expressionOfCalculations.postValue("${expressionOfCalculations.value}${number}")
+
     }
 
     fun didTapArithmeticOperator(button: CalcButtonEnum) {
