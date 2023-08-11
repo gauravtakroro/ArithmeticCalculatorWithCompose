@@ -1,7 +1,9 @@
-package io.gauravtak.ArithmeticCalculatorWithCompose
+package io.gauravtak.arithmetic_calculator_with_compose
 
-import androidx.appcompat.app.AppCompatActivity
+
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import io.gauravtak.ArithmeticCalculatorWithCompose.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

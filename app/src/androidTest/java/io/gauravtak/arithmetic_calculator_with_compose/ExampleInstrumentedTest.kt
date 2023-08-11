@@ -1,4 +1,4 @@
-package io.gauravtak.ArithmeticCalculatorWithCompose
+package io.gauravtak.arithmetic_calculator_with_compose
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

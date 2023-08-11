@@ -13,8 +13,9 @@
         android:theme="@style/Theme.ArithmeticCalculatorWithCompose"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name="io.gauravtak.arithmetic_calculator_with_compose.MainActivity"
+            android:exported="true"
+            tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
