@@ -1,14 +1,21 @@
 package io.gauravtak.arithmetic_calculator_with_compose
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.gauravtak.arithmetic_calculator_with_compose.composable_uis.CalcButtonEnum
 
 class CalculatorViewModel : ViewModel() {
 
+    private var runningNumberValue = 0.0
+    private var currentArithmeticOperation: CalcButtonEnum? = null
     private var isArithmeticOperationButtonTapped = false
+
     private var resultValueDisplayed = MutableLiveData("")
     private var expressionOfCalculations = MutableLiveData("")
+
+    private val _slightDelay = 300L // 300ms for smoothness of calculations
+    private val _logTag = "DidTap"
 
     fun getCurrentExpression(): MutableLiveData<String> {
         return expressionOfCalculations
@@ -59,6 +66,25 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun didTapArithmeticOperator(button: CalcButtonEnum) {
-        // calculate calculations using Tapped Arithmetic Operator
+        if (isArithmeticOperationButtonTapped) {
+            didTapEqualOperator() // perform Equal Operation First, if two consecutive Arithmetic operator tapped
+        }
+        // perform calculations using Tapped Arithmetic Operator
+        currentArithmeticOperation = button
+        runningNumberValue = resultValueDisplayed.value?.toDouble() ?: 0.0
+        isArithmeticOperationButtonTapped = true
+        val result = StringBuilder()
+        result.append(resultValueDisplayed.value)
+        result.append(button.buttonText)
+        resultValueDisplayed.postValue(result.toString())
+        if (expressionOfCalculations.value?.last()
+                .toString() != button.buttonText
+        ) {
+            resultValueDisplayed.postValue(button.buttonText)
+            expressionOfCalculations.postValue("${expressionOfCalculations.value}${button.buttonText}")
+        }
+        PerformOperations.after(_slightDelay) {
+            Log.d(_logTag, "${resultValueDisplayed.value} ${expressionOfCalculations.value}")
+        }
     }
 }
