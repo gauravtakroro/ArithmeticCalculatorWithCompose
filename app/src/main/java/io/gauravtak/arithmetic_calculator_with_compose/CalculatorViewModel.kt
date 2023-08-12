@@ -12,9 +12,14 @@ class CalculatorViewModel : ViewModel() {
     private var isArithmeticOperationButtonTapped = false
 
     private var resultValueDisplayed = MutableLiveData("")
+    // this is used to show the result value and show output what  we tapped with calc buttons
     private var expressionOfCalculations = MutableLiveData("")
+    // this is used to show the complete expressions value of calculations and show output what we tapped with calc buttons, numbers buttons  etc.
 
-    private val _slightDelay = 300L // 300ms for smoothness of calculations
+    private val _slightDelay = 300L /* 300ms for smoothness of calculations,
+     this delay has been added because postValue is async  process,
+     to get smooth or updated results  slight  delay could be good*/
+
     private val _logTag = "DidTap"
 
     fun getCurrentExpression(): MutableLiveData<String> {
@@ -59,18 +64,45 @@ class CalculatorViewModel : ViewModel() {
 
     fun didTapPercentOperator() {
         //didTapPercentOperator
+        if (resultValueDisplayed.value != "+" && resultValueDisplayed.value != "-" && resultValueDisplayed.value != "/" && resultValueDisplayed.value != "x") {
+            resultValueDisplayed.postValue(((resultValueDisplayed.value?.toDouble() ?: 0.0) / 100.0).ridZero())
+            PerformOperations.after(_slightDelay) {
+                expressionOfCalculations.postValue( "${expressionOfCalculations.value}/100 = ${resultValueDisplayed.value}")
+            }
+        }
     }
 
     fun didTapPlusMinusSign() {
         // didTapPlusMinusSign
+        if (resultValueDisplayed.value != "+" && resultValueDisplayed.value != "-" && resultValueDisplayed.value != "/" && resultValueDisplayed.value != "x") {
+            val valueBeforeNegative = resultValueDisplayed.value?.toDouble() ?: 0.0
+            resultValueDisplayed.postValue((valueBeforeNegative * -1).ridZero())
+            PerformOperations.after(_slightDelay) {
+                expressionOfCalculations.postValue( "${expressionOfCalculations.value}x-1 = ${resultValueDisplayed.value}")
+            }
+        }
     }
 
     fun didTapClearExpression() {
         // didTapClearExpression
+        resultValueDisplayed.postValue("0")
+        expressionOfCalculations.postValue("")
+        isArithmeticOperationButtonTapped = false
     }
 
     fun didTapDecimalOperator() {
         // didTapDecimalOperator
+        if (resultValueDisplayed.value != "+" && resultValueDisplayed.value != "-" && resultValueDisplayed.value != "/" && resultValueDisplayed.value != "x") {
+            if (resultValueDisplayed.value?.contains(".") == true) {
+                // don't do anything
+            } else {
+                resultValueDisplayed.postValue("${resultValueDisplayed.value}.")
+                expressionOfCalculations.postValue("${expressionOfCalculations.value}.")
+            }
+        } else {
+            resultValueDisplayed.postValue( ".")
+            expressionOfCalculations.postValue( "${expressionOfCalculations.value}.")
+        }
     }
 
     fun didTapNumberValue(button: CalcButtonEnum) {
