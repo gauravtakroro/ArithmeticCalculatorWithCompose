@@ -12,7 +12,7 @@ class CalculatorViewModel : ViewModel() {
     private var isArithmeticOperationButtonTapped = false
 
     private var resultValueDisplayed = MutableLiveData("")
-    // this is used to show the result value and show output what  we tapped with calc buttons
+    // this is used to show the result value and show output what we tapped with calc buttons
     private var expressionOfCalculations = MutableLiveData("")
     // this is used to show the complete expressions value of calculations and show output what we tapped with calc buttons, numbers buttons  etc.
 
