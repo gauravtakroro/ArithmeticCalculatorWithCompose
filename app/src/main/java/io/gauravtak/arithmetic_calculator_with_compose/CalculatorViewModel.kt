@@ -64,7 +64,7 @@ class CalculatorViewModel : ViewModel() {
 
     fun didTapPercentOperator() {
         //didTapPercentOperator
-        if (resultValueDisplayed.value != "+" && resultValueDisplayed.value != "-" && resultValueDisplayed.value != "/" && resultValueDisplayed.value != "x") {
+        if (isResultNotContainsArithmeticOperatorSymbol()) {
             resultValueDisplayed.postValue(((resultValueDisplayed.value?.toDouble() ?: 0.0) / 100.0).ridZero())
             PerformOperations.after(_slightDelay) {
                 expressionOfCalculations.postValue( "${expressionOfCalculations.value}/100 = ${resultValueDisplayed.value}")
@@ -74,7 +74,7 @@ class CalculatorViewModel : ViewModel() {
 
     fun didTapPlusMinusSign() {
         // didTapPlusMinusSign
-        if (resultValueDisplayed.value != "+" && resultValueDisplayed.value != "-" && resultValueDisplayed.value != "/" && resultValueDisplayed.value != "x") {
+        if (isResultNotContainsArithmeticOperatorSymbol()) {
             val valueBeforeNegative = resultValueDisplayed.value?.toDouble() ?: 0.0
             resultValueDisplayed.postValue((valueBeforeNegative * -1).ridZero())
             PerformOperations.after(_slightDelay) {
@@ -92,7 +92,7 @@ class CalculatorViewModel : ViewModel() {
 
     fun didTapDecimalOperator() {
         // didTapDecimalOperator
-        if (resultValueDisplayed.value != "+" && resultValueDisplayed.value != "-" && resultValueDisplayed.value != "/" && resultValueDisplayed.value != "x") {
+        if (isResultNotContainsArithmeticOperatorSymbol()) {
             if (resultValueDisplayed.value?.contains(".") == true) {
                 // don't do anything
             } else {
@@ -145,5 +145,9 @@ class CalculatorViewModel : ViewModel() {
         PerformOperations.after(_slightDelay) {
             Log.d(_logTag, "${resultValueDisplayed.value} ${expressionOfCalculations.value}")
         }
+    }
+
+    private fun isResultNotContainsArithmeticOperatorSymbol() : Boolean {
+        return resultValueDisplayed.value != "+" && resultValueDisplayed.value != "-" && resultValueDisplayed.value != "/" && resultValueDisplayed.value != "x"
     }
 }
