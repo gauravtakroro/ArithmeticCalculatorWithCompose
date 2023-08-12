@@ -26,7 +26,35 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun didTapEqualOperator() {
-      // didTapEqualOperator
+        // didTapEqualOperator
+        val runningValue = runningNumberValue
+        val currentValue = resultValueDisplayed.value?.toDouble() ?: 0.0
+        isArithmeticOperationButtonTapped = false
+        when (currentArithmeticOperation) {
+            CalcButtonEnum.Plus -> {
+                resultValueDisplayed.postValue((runningValue + currentValue).ridZero())
+            }
+            CalcButtonEnum.Minus -> {
+                resultValueDisplayed.postValue((runningValue - currentValue).ridZero())
+            }
+            CalcButtonEnum.Multiply -> {
+                resultValueDisplayed.postValue((runningValue * currentValue).ridZero())
+            }
+            CalcButtonEnum.Divide -> {
+                resultValueDisplayed.postValue((runningValue / currentValue).ridZero())
+            }
+            else -> {
+                // no code
+            }
+        }
+        PerformOperations.after(_slightDelay) {
+            val resultNew = StringBuilder()
+            resultNew.append(this.expressionOfCalculations.value)
+            resultNew.append("=")
+            resultNew.append(this.resultValueDisplayed.value)
+            expressionOfCalculations.postValue(resultNew.toString())
+            Log.d(_logTag, "${resultValueDisplayed.value} ${expressionOfCalculations.value}")
+        }
     }
 
     fun didTapPercentOperator() {
@@ -62,7 +90,6 @@ class CalculatorViewModel : ViewModel() {
             }
         }
         expressionOfCalculations.postValue("${expressionOfCalculations.value}${number}")
-
     }
 
     fun didTapArithmeticOperator(button: CalcButtonEnum) {
