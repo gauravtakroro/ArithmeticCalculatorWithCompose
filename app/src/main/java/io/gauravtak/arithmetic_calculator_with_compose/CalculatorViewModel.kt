@@ -31,6 +31,9 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun didTapEqualOperator() {
+        if (!this.isArithmeticOperationButtonTapped) {
+            return // don't perform any calculations if no Arithmetic Operation Button Tapped
+        }
         // didTapEqualOperator
         val runningValue = runningNumberValue
         val currentValue = resultValueDisplayed.value?.toDouble() ?: 0.0
@@ -109,7 +112,7 @@ class CalculatorViewModel : ViewModel() {
         //  code for numbers
         val number = button.expressionValue
         if (isArithmeticOperationButtonTapped) {
-            if (resultValueDisplayed.value != "+" && resultValueDisplayed.value != "-" && resultValueDisplayed.value != "/" && resultValueDisplayed.value != "x") {
+            if (isResultNotContainsArithmeticOperatorSymbol()) {
                 resultValueDisplayed.postValue("${resultValueDisplayed.value}${number}")
             } else {
                 resultValueDisplayed.postValue(number)
@@ -125,29 +128,42 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun didTapArithmeticOperator(button: CalcButtonEnum) {
-        if (isArithmeticOperationButtonTapped) {
+        val slightDelayBetweenTwoOperations: Long = if (isArithmeticOperationButtonTapped && isResultNotContainsArithmeticOperatorSymbol()) {
             didTapEqualOperator() // perform Equal Operation First, if two consecutive Arithmetic operator tapped
+            500L
+        } else if (isArithmeticOperationButtonTapped && !isResultNotContainsArithmeticOperatorSymbol()) {
+            if (button == this.currentArithmeticOperation) {
+                return  // no code required because same operator button tapped twice or multiple times
+            }
+            this.resultValueDisplayed.postValue(this.runningNumberValue.ridZero())
+            // remove last element of string (as expressionOfCalculations)
+            this.expressionOfCalculations.postValue(this.expressionOfCalculations.value?.dropLast(1))
+            500L
+        } else {
+            0L
         }
-        // perform calculations using Tapped Arithmetic Operator
-        currentArithmeticOperation = button
-        runningNumberValue = resultValueDisplayed.value?.toDouble() ?: 0.0
-        isArithmeticOperationButtonTapped = true
-        val result = StringBuilder()
-        result.append(resultValueDisplayed.value)
-        result.append(button.buttonText)
-        resultValueDisplayed.postValue(result.toString())
-        if (expressionOfCalculations.value?.last()
-                .toString() != button.buttonText
-        ) {
-            resultValueDisplayed.postValue(button.buttonText)
-            expressionOfCalculations.postValue("${expressionOfCalculations.value}${button.buttonText}")
-        }
-        PerformOperations.after(_slightDelay) {
-            Log.d(_logTag, "${resultValueDisplayed.value} ${expressionOfCalculations.value}")
+        PerformOperations.after(slightDelayBetweenTwoOperations) {
+            // perform calculations using Tapped Arithmetic Operator
+            currentArithmeticOperation = button
+            runningNumberValue = resultValueDisplayed.value?.toDouble() ?: 0.0
+            isArithmeticOperationButtonTapped = true
+            val result = StringBuilder()
+            result.append(resultValueDisplayed.value)
+            result.append(button.buttonText)
+            resultValueDisplayed.postValue(result.toString())
+            if (expressionOfCalculations.value?.last()
+                    .toString() != button.buttonText
+            ) {
+                resultValueDisplayed.postValue(button.buttonText)
+                expressionOfCalculations.postValue("${expressionOfCalculations.value}${button.buttonText}")
+            }
+            PerformOperations.after(_slightDelay) {
+                Log.d(_logTag, "${resultValueDisplayed.value} ${expressionOfCalculations.value}")
+            }
         }
     }
 
     private fun isResultNotContainsArithmeticOperatorSymbol() : Boolean {
-        return resultValueDisplayed.value != "+" && resultValueDisplayed.value != "-" && resultValueDisplayed.value != "/" && resultValueDisplayed.value != "x"
+        return resultValueDisplayed.value != "+" && resultValueDisplayed.value != "-" && resultValueDisplayed.value != "/" && resultValueDisplayed.value != "x" && resultValueDisplayed.value != "÷"
     }
 }
