@@ -66,6 +66,9 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun didTapPercentOperator() {
+        if (resultValueDisplayed.value?.isEmpty() == true) {
+            return
+        }
         //didTapPercentOperator
         if (isResultNotContainsArithmeticOperatorSymbol()) {
             resultValueDisplayed.postValue(((resultValueDisplayed.value?.toDouble() ?: 0.0) / 100.0).ridZero())
@@ -76,6 +79,9 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun didTapPlusMinusSign() {
+        if (resultValueDisplayed.value?.isEmpty() == true) {
+            return
+        }
         // didTapPlusMinusSign
         if (isResultNotContainsArithmeticOperatorSymbol()) {
             val valueBeforeNegative = resultValueDisplayed.value?.toDouble() ?: 0.0
@@ -128,6 +134,9 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun didTapArithmeticOperator(button: CalcButtonEnum) {
+        if (resultValueDisplayed.value?.isEmpty() == true) {
+            return
+        }
         val slightDelayBetweenTwoOperations: Long = if (isArithmeticOperationButtonTapped && isResultNotContainsArithmeticOperatorSymbol()) {
             didTapEqualOperator() // perform Equal Operation First, if two consecutive Arithmetic operator tapped
             500L
