@@ -31,7 +31,7 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun didTapEqualOperator() {
-        if (!this.isArithmeticOperationButtonTapped) {
+        if (!this.isArithmeticOperationButtonTapped  || !isResultNotContainsArithmeticOperatorSymbol()) {
             return // don't perform any calculations if no Arithmetic Operation Button Tapped
         }
         // didTapEqualOperator
@@ -137,17 +137,20 @@ class CalculatorViewModel : ViewModel() {
         if (resultValueDisplayed.value?.isEmpty() == true) {
             return
         }
-        val slightDelayBetweenTwoOperations: Long = if (isArithmeticOperationButtonTapped && isResultNotContainsArithmeticOperatorSymbol()) {
+
+        if (isArithmeticOperationButtonTapped && isResultNotContainsArithmeticOperatorSymbol()) {
             didTapEqualOperator() // perform Equal Operation First, if two consecutive Arithmetic operator tapped
-            500L
-        } else if (isArithmeticOperationButtonTapped && !isResultNotContainsArithmeticOperatorSymbol()) {
+            return
+        }
+
+        val slightDelayBetweenTwoOperations: Long = if (isArithmeticOperationButtonTapped && !isResultNotContainsArithmeticOperatorSymbol()) {
             if (button == this.currentArithmeticOperation) {
                 return  // no code required because same operator button tapped twice or multiple times
             }
             this.resultValueDisplayed.postValue(this.runningNumberValue.ridZero())
             // remove last element of string (as expressionOfCalculations)
             this.expressionOfCalculations.postValue(this.expressionOfCalculations.value?.dropLast(1))
-            500L
+            300L
         } else {
             0L
         }
